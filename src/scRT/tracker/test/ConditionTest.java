@@ -15,7 +15,7 @@ public class ConditionTest {
 	public void testIsTrue() {
 		
 
-		Condition co = new Condition(new ConfigurationValue(new Node()), new ConfgurationValue(), new Operator(0));
+//		Condition co = new Condition(new ConfigurationValue(new Node()), new ConfgurationValue(), new Operator(0));
 	}
 
 }

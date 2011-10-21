@@ -42,7 +42,7 @@ public class ConfigurationRequirementTest {
 
 	@Test
 	public void testGetCASet() {
-		cr = new ConfigurationRequirement();
+//		cr = new ConfigurationRequirement();
 		
 		Iterator<ConfigurationValue> iii = cr.getCVSet().iterator();
 		assertTrue(iii.hasNext());
