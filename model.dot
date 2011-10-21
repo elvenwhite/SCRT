@@ -1,0 +1,12 @@
+digraph G {
+node [shape=circle]
+edge [fontsize=10]
+
+	cr1 -> cr2 [arrowhead=normal label=pr1];
+	cr1 -> cr3 [arrowhead=normal label=pr4];
+	cr1 -> cr4 [arrowhead=onormal label=pr2];
+	
+	cr2 -> cr4 [arrowhead=tee label=pr3];
+
+	cr4 -> cr2 [arrowhead=normal label=pr5];
+}
