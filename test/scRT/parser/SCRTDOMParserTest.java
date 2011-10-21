@@ -1,4 +1,4 @@
-package scRT.parser.test;
+package scRT.parser;
 
 import static org.junit.Assert.*;
 
@@ -8,8 +8,7 @@ public class SCRTDOMParserTest {
 
 	@Test
 	public void testParse() {
-		
-	}
 
+	}
 
 }
