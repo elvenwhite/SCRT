@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<CRD>
+<ConfigurationRequirement id="cr1">
+	<name>EmployeeInfo</name>
+   <ConfigurationValue id="bk101">
+      <name>Name Length</name>
+      <value>10</value>
+      <type>int</type>
+   </ConfigurationValue>
+   <ConfigurationValue id="bk102">
+      <name>Ralls, Kim</name>
+      <value>Midnight Rain</value>
+      <type>Fantasy</type>
+      <price>5.95</price>
+      <publish_date>2000-12-16</publish_date>
+      <description>A former architect battles corporate zombies, 
+      an evil sorceress, and her own childhood to become queen 
+      of the world.</description>
+   </ConfigurationValue>
+   <ConfigurationValue id="bk103">
+      <name>Corets, Eva</name>
+      <value>Maeve Ascendant</value>
+      <type>Fantasy</type>
+      <price>5.95</price>
+      <publish_date>2000-11-17</publish_date>
+      <description>After the collapse of a nanotechnology 
+      society in England, the young survivors lay the 
+      foundation for a new society.</description>
+   </ConfigurationValue>
+</ConfigurationRequirement>
+<ConfigurationRequirement id="cr2">
+	<name>DisplayEmployeeInfo</name>
+   <ConfigurationValue id="bk104">
+      <name>Namefield Length</name>
+      <value>20</value>
+      <type>int</type>
+      <price>5.95</price>
+      <publish_date>2001-03-10</publish_date>
+      <description>In post-apocalypse England, the mysterious 
+      agent known only as Oberon helps to create a new life 
+      for the inhabitants of London. Sequel to Maeve 
+      Ascendant.</description>
+   </ConfigurationValue>
+   <ConfigurationValue id="bk105">
+      <name>Corets, Eva</name>
+      <value>The Sundered Grail</value>
+      <type>Fantasy</type>
+      <price>5.95</price>
+      <publish_date>2001-09-10</publish_date>
+      <description>The two daughters of Maeve, half-sisters, 
+      battle one another for control of England. Sequel to 
+      Oberon's Legacy.</description>
+   </ConfigurationValue>
+   <ConfigurationValue id="bk106">
+      <name>Randall, Cynthia</name>
+      <value>Lover Birds</value>
+      <type>Romance</type>
+      <price>4.95</price>
+      <publish_date>2000-09-02</publish_date>
+      <description>When Carla meets Paul at an ornithology 
+      conference, tempers fly as feathers get ruffled.</description>
+   </ConfigurationValue>
+   <ConfigurationValue id="bk107">
+      <name>Thurman, Paula</name>
+      <value>Splish Splash</value>
+      <type>Romance</type>
+      <price>4.95</price>
+      <publish_date>2000-11-02</publish_date>
+      <description>A deep sea diver finds true love twenty 
+      thousand leagues beneath the sea.</description>
+   </ConfigurationValue>
+   <ConfigurationValue id="bk108">
+      <name>Knorr, Stefan</name>
+      <value>Creepy Crawlies</value>
+      <type>Horror</type>
+      <price>4.95</price>
+      <publish_date>2000-12-06</publish_date>
+      <description>An anthology of horror stories about roaches,
+      centipedes, scorpions  and other insects.</description>
+   </ConfigurationValue>
+   <ConfigurationValue id="bk109">
+      <name>Kress, Peter</name>
+      <value>Paradox Lost</value>
+      <type>Science Fiction</type>
+      <price>6.95</price>
+      <publish_date>2000-11-02</publish_date>
+      <description>After an inadvertant trip through a Heisenberg
+      Uncertainty Device, James Salway discovers the problems 
+      of being quantum.</description>
+   </ConfigurationValue>
+   <ConfigurationValue id="bk110">
+      <name>O'Brien, Tim</name>
+      <value>Microsoft .NET: The Programming Bible</value>
+      <type>Computer</type>
+      <price>36.95</price>
+      <publish_date>2000-12-09</publish_date>
+      <description>Microsoft's .NET initiative is explored in 
+      detail in this deep programmer's reference.</description>
+   </ConfigurationValue>
+   <ConfigurationValue id="bk111">
+      <name>O'Brien, Tim</name>
+      <value>MSXML3: A Comprehensive Guide</value>
+      <type>Computer</type>
+      <price>36.95</price>
+      <publish_date>2000-12-01</publish_date>
+      <description>The Microsoft MSXML3 parser is covered in 
+      detail, with attention to XML DOM interfaces, XSLT processing, 
+      SAX and more.</description>
+   </ConfigurationValue>
+   <ConfigurationAction id="bk112">
+      <name>Galos, Mike</name>
+      <arg>Visual Studio 7: A Comprehensive Guide</arg>
+      <arg>Computer</arg>
+      <arg>49.95</arg>
+      <publish_date>2001-04-16</publish_date>
+      <description>Microsoft Visual Studio 7 is explored in depth,
+      looking at how Visual Basic, Visual C++, C#, and ASP+ are 
+      integrated into a comprehensive development 
+      environment.</description>
+   </ConfigurationAction>
+</ConfigurationRequirement>
+</CRD>
+

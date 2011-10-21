@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<PropagationDocuments>
+	<propagation id="pr1">
+		<type>imperative</type>
+			<source id="cr1"/>
+			<target id="cr2"/>
+			<condition>
+				<cv id="bk101"/>
+				<operator>
+					GREATER_THAN
+				</operator>
+				<cv id="bk104"/>
+			</condition>
+	</propagation>
+	<propagation id="pr2">
+		<type>conductive</type>
+			<source id="cr1"/>
+			<target id="cr2"/>
+			<ca id="bk112">
+	</propagation>
+	<propagation id="pr3">
+		<type>imperative</type>
+			<source id="cr1"/>
+			<target id="cr2"/>
+			<condition>
+				<cv id="bk101"/>
+				<operator>
+					GREATER_THAN
+				</operator>
+				<cv id="bk104"/>
+			</condition>
+			<propagationcondition>
+				<type>businessrule</type>
+					<cv id="bk128"/>
+			</propagationcondition>			
+	</propagation>	
+</PropagationDocuments>	
