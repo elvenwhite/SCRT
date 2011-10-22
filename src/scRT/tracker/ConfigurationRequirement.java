@@ -1,40 +1,34 @@
 package scRT.tracker;
 
-import java.util.Iterator;
-
+import org.apache.log4j.Logger;
 import org.apache.xerces.dom.DeepNodeListImpl;
-import org.apache.xerces.dom.DocumentImpl;
 import org.apache.xerces.dom.NodeImpl;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class ConfigurationRequirement {
-	private ConfigurationValueSet<ConfigurationValue> CVSet;
-	private ConfigurationActionSet<ConfigurationAction> CASet;
-	
 
-	
+	private static Logger log = Logger
+			.getLogger(ConfigurationRequirement.class);
+
+	private ConfigurationValueSet CVSet;
+	private ConfigurationActionSet CASet;
+
 	private String name;
 	private String id;
-	
-	public ConfigurationRequirement(Node item){
+
+	public ConfigurationRequirement(Node item) {
 		super();
-		setCVSet(new ConfigurationValueSet<ConfigurationValue>());
-		setCASet(new ConfigurationActionSet<ConfigurationAction>());
-		
+		setCVSet(new ConfigurationValueSet());
+		setCASet(new ConfigurationActionSet());
 
-		
-		setId(item.getAttributes().getNamedItem("id").getNodeValue());
+		this.id = item.getAttributes().getNamedItem("id").getNodeValue();
 
+		Node tempnode = item.getFirstChild();
 
-		Node tempnode= item.getFirstChild();
-		
-		while ( tempnode.getNextSibling()!=null){
-			
+		while (tempnode.getNextSibling() != null) {
 
-			if (tempnode.getNodeName()=="name") {
-				setName(tempnode.getTextContent());
+			if (tempnode.getNodeName().equals("name")) {
+				this.name = tempnode.getTextContent();
 			} else {
 				tempnode = tempnode.getNextSibling();
 				continue;
@@ -42,59 +36,59 @@ public class ConfigurationRequirement {
 			tempnode = tempnode.getNextSibling();
 
 		}
-		System.out.println(getId()+"-"+getName());
-		extractCV( (NodeImpl) item);
-		extractCA( (NodeImpl) item);
+		log.debug(getId() + "-" + getName());
+		extractCV((NodeImpl) item);
+		extractCA((NodeImpl) item);
 	}
-	
-	public void addCV(ConfigurationValue cv){
+
+	public void addCV(ConfigurationValue cv) {
 		getCVSet().add(cv);
 		return;
 	}
-	public void addCA(ConfigurationAction ca){
+
+	public void addCA(ConfigurationAction ca) {
 		getCASet().add(ca);
 		return;
 	}
 
-	public ConfigurationValueSet<ConfigurationValue> getCVSet() {
+	public ConfigurationValueSet getCVSet() {
 		return CVSet;
 	}
 
-	public void setCVSet(ConfigurationValueSet<ConfigurationValue> cVSet) {
+	public void setCVSet(ConfigurationValueSet cVSet) {
 		CVSet = cVSet;
 	}
 
-	public ConfigurationActionSet<ConfigurationAction> getCASet() {
+	public ConfigurationActionSet getCASet() {
 		return CASet;
 	}
 
-	public void setCASet(ConfigurationActionSet<ConfigurationAction> cASet) {
+	public void setCASet(ConfigurationActionSet cASet) {
 		CASet = cASet;
 	}
 
-	public void extractCV(NodeImpl item){
-		int length=0;
+	public void extractCV(NodeImpl item) {
+		int length = 0;
 		ConfigurationValue cv;
-		
+
 		DeepNodeListImpl list = new DeepNodeListImpl(item, "ConfigurationValue");
-		
-//		NodeList list = (DeepNodeListImpl) item.getElementsByTagName("ConfigurationValue");
+
 		length = list.getLength();
-		for (int i = 0; i<length;i++){
+		for (int i = 0; i < length; i++) {
 			cv = new ConfigurationValue(list.item(i));
 			CVSet.add(cv);
 		}
 	}
-	
-	public void extractCA(NodeImpl item){
-		int length=0;
-		ConfigurationAction ca;
-		
-		DeepNodeListImpl list = new DeepNodeListImpl(item, "ConfigurationAction");
 
-//		NodeList list = (DeepNodeListImpl) item.getElementsByTagName("ConfigurationAction");
+	public void extractCA(NodeImpl item) {
+		int length = 0;
+		ConfigurationAction ca;
+
+		DeepNodeListImpl list = new DeepNodeListImpl(item,
+				"ConfigurationAction");
+
 		length = list.getLength();
-		for (int i = 0; i<length;i++){
+		for (int i = 0; i < length; i++) {
 			ca = new ConfigurationAction(list.item(i));
 			CASet.add(ca);
 		}
@@ -104,16 +98,7 @@ public class ConfigurationRequirement {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getId() {
 		return id;
 	}
-
-	public void setId(String string) {
-		this.id = string;
-	}
-	
 }

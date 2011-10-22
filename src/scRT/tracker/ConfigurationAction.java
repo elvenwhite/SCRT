@@ -3,62 +3,63 @@ package scRT.tracker;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Node;
 
 public class ConfigurationAction {
+	private static Logger log = Logger.getLogger(ConfigurationAction.class);
+
 	private String id;
 	private String name;
 	private List<String> args;
 
 	public ConfigurationAction(Node item) {
-		args = new ArrayList<String>();
-		setId(item.getAttributes().getNamedItem("id").getNodeValue());
+		this.args = new ArrayList<String>();
+		this.id = item.getAttributes().getNamedItem("id").getNodeValue();
 
-		Node tempnode= item.getFirstChild();
-		
-		while (tempnode.getNextSibling()!=null){
-			
+		Node tempnode = item.getFirstChild();
 
-			if (tempnode.getNodeName()=="name") {
-				setName(tempnode.getTextContent());
-			} else if (tempnode.getNodeName()=="arg"){
-				setArgs(tempnode.getTextContent());
+		while (tempnode.getNextSibling() != null) {
+			if (tempnode.getNodeName().equals("name")) {
+				this.name = tempnode.getTextContent();
+			} else if (tempnode.getNodeName().equals("arg")) {
+				this.args.add(tempnode.getTextContent());
 			} else {
 				tempnode = tempnode.getNextSibling();
 				continue;
 			}
 			tempnode = tempnode.getNextSibling();
-		}	
-		System.out.println("CA"+getName()+"-"+getArgs());
+		}
+		log.debug("CA" + getName() + "-" + getArgs());
 	}
 
 	public String getId() {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public int getArgCount() {
+		return args.size();
 	}
 
-	public List<String> getArgs() {
+	public Iterable<String> getArgs() {
 		return args;
 	}
 
-	public void setArgs(List<String> args) {
-		this.args = args;
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 
-	public void setArgs(String arg) {
-		this.args.add(arg);		
+	@Override
+	public boolean equals(Object o) {
+		if (!(o.getClass().equals(getClass())))
+			return false;
+
+		ConfigurationAction compare = (ConfigurationAction) o;
+		return compare.id.equals(id);
 	}
-
-
 }

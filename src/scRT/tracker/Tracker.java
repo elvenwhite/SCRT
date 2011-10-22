@@ -31,8 +31,6 @@ public class Tracker {
 					"http://apache.org/xml/features/dom/defer-node-expansion",
 					false);
 			parser.parse(crfilename);
-			// out = new PrintWriter(new OutputStreamWriter(System.out,
-			// "UTF8"));
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
 			return;
@@ -48,12 +46,12 @@ public class Tracker {
 					"http://apache.org/xml/features/dom/defer-node-expansion",
 					false);
 			parser2.parse(prfilename);
-			// out = new PrintWriter(new OutputStreamWriter(System.out,
-			// "UTF8"));
 		} catch (IOException e) {
-			System.err.println("except" + e);
+			log.error(e.getMessage(), e);
+			return;
 		} catch (org.xml.sax.SAXException e) {
-			System.err.println("except" + e);
+			log.error(e.getMessage(), e);
+			return;
 		}
 	}
 

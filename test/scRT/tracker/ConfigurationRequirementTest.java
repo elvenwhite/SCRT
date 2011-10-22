@@ -1,23 +1,100 @@
 package scRT.tracker;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
-import java.util.Iterator;
+import java.io.ByteArrayInputStream;
 
-import org.apache.xerces.impl.xs.opti.DefaultNode;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.w3c.dom.Node;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 public class ConfigurationRequirementTest {
-	private ConfigurationRequirement cr;
-	
-	
-	@Before
-	public void setUp() throws Exception {
+	private ConfigurationRequirement requirement1;
 
+	@Before
+	public void prepareDocument() throws Exception {
+		Logger.getLogger("scRT").setLevel(Level.OFF);
+
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("<?xml version=\"1.0\"?>");
+		buffer.append("<CRD>");
+		buffer.append("<ConfigurationRequirement  id=\"cr1\">");
+		buffer.append("<name>EmployeeInfo</name>");
+
+		buffer.append("<ConfigurationValue id=\"id0001\">");
+		buffer.append("<name>NAME1</name>");
+		buffer.append("<value>10</value>");
+		buffer.append("<type>int</type>");
+		buffer.append("</ConfigurationValue>");
+
+		buffer.append("<ConfigurationValue id=\"id0002\">");
+		buffer.append("<name>NAME2</name>");
+		buffer.append("<value>-15.4</value>");
+		buffer.append("<type>float</type>");
+		buffer.append("</ConfigurationValue>");
+
+		buffer.append("<ConfigurationValue id=\"id0003\">");
+		buffer.append("<name>Corets, Eva</name>");
+		buffer.append("<value>Maeve Ascendant</value>");
+		buffer.append("<type>Fantasy</type>");
+		buffer.append("</ConfigurationValue>");
+
+		buffer.append("<ConfigurationAction id=\"action0001\">");
+		buffer.append("<name>Galos, Mike</name>");
+		buffer.append("<arg>Visual Studio 7: A Comprehensive Guide</arg>");
+		buffer.append("<arg>Computer</arg>");
+		buffer.append("<arg>49.95</arg>");
+		buffer.append("<publish_date>2001-04-16</publish_date>");
+		buffer.append("<description>Microsoft Visual Studio 7 is explored in depth,");
+		buffer.append("looking at how Visual Basic, Visual C++, C#, and ASP+ are");
+		buffer.append("integrated into a comprehensive development");
+		buffer.append("environment.</description>");
+		buffer.append("</ConfigurationAction>");
+
+		buffer.append("</ConfigurationRequirement>");
+		buffer.append("</CRD>");
+
+		ByteArrayInputStream bis = new ByteArrayInputStream(buffer.toString()
+				.getBytes());
+
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		dBuilder.setErrorHandler(new ErrorHandler() {
+			@Override
+			public void error(SAXParseException e) throws SAXException {
+				throw e;
+			}
+
+			@Override
+			public void fatalError(SAXParseException e) throws SAXException {
+				throw e;
+			}
+
+			@Override
+			public void warning(SAXParseException e) throws SAXException {
+				throw e;
+			}
+		});
+		Document doc = dBuilder.parse(bis);
+		doc.getDocumentElement().normalize();
+
+		Element root = doc.getDocumentElement();
+
+		NodeList nodeList = root
+				.getElementsByTagName("ConfigurationRequirement");
+		requirement1 = new ConfigurationRequirement(nodeList.item(0));
 	}
 
 	@After
@@ -26,27 +103,43 @@ public class ConfigurationRequirementTest {
 
 	@Test
 	public void testConfigurationRequirement() {
-		assert(true);
+		assert (true);
 	}
 
 	@Test
 	public void testAddCV() {
-		assert(true);
+		assert (true);
 	}
 
 	@Test
 	public void testGetCVSet() {
-		assert(true);
+		assert (true);
 	}
 
 	@Test
 	public void testGetCASet() {
-		Node node = new DefaultNode();
-		cr = new ConfigurationRequirement(node);
-		
-		Iterator<ConfigurationValue> iii = cr.getCVSet().iterator();
-		assertTrue(iii.hasNext());
-		assertEquals("cv1",iii.next().getValue());
+		assertNotNull("Value should not be null.", requirement1);
+		assertEquals("Requirement's id is invalid.", "cr1",
+				requirement1.getId());
+		assertEquals("Requirement's name is invalid.", "EmployeeInfo",
+				requirement1.getName());
+
+		ConfigurationValueSet valueSet = requirement1.getCVSet();
+		assertNotNull(valueSet);
+		assertEquals(3, valueSet.size());
+		ConfigurationValue[] values = new ConfigurationValue[valueSet.size()];
+		valueSet.toArray(values);
+		assertEquals("id0001", values[0].getId());
+		assertEquals("NAME1", values[0].getName());
+
+		ConfigurationActionSet actionSet = requirement1.getCASet();
+		assertNotNull(actionSet);
+		assertEquals(1, actionSet.size());
+		ConfigurationAction[] actions = new ConfigurationAction[actionSet
+				.size()];
+		actionSet.toArray(actions);
+		assertEquals("action0001", actions[0].getId());
+		assertEquals("Galos, Mike", actions[0].getName());
 	}
 
 }
