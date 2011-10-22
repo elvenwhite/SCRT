@@ -1,4 +1,4 @@
-package scRT.tracker.test;
+package scRT.tracker;
 
 import static org.junit.Assert.*;
 

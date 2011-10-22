@@ -1,16 +1,15 @@
-package scRT.tracker.test;
+package scRT.tracker;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Iterator;
 
+import org.apache.xerces.impl.xs.opti.DefaultNode;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import scRT.tracker.ConfigurationAction;
-import scRT.tracker.ConfigurationRequirement;
-import scRT.tracker.ConfigurationValue;
+import org.w3c.dom.Node;
 
 public class ConfigurationRequirementTest {
 	private ConfigurationRequirement cr;
@@ -42,7 +41,8 @@ public class ConfigurationRequirementTest {
 
 	@Test
 	public void testGetCASet() {
-//		cr = new ConfigurationRequirement();
+		Node node = new DefaultNode();
+		cr = new ConfigurationRequirement(node);
 		
 		Iterator<ConfigurationValue> iii = cr.getCVSet().iterator();
 		assertTrue(iii.hasNext());
