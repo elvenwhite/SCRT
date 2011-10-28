@@ -58,22 +58,22 @@ public class ConfigurationValueTest {
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-		dBuilder.setErrorHandler(new ErrorHandler() {
-			@Override
-			public void error(SAXParseException e) throws SAXException {
-				throw e;
-			}
-
-			@Override
-			public void fatalError(SAXParseException e) throws SAXException {
-				throw e;
-			}
-
-			@Override
-			public void warning(SAXParseException e) throws SAXException {
-				throw e;
-			}
-		});
+//		dBuilder.setErrorHandler(new ErrorHandler() {
+//			@Override
+//			public void error(SAXParseException e) throws SAXException {
+//				throw e;
+//			}
+//
+//			@Override
+//			public void fatalError(SAXParseException e) throws SAXException {
+//				throw e;
+//			}
+//
+//			@Override
+//			public void warning(SAXParseException e) throws SAXException {
+//				throw e;
+//			}
+//		});
 		Document doc = dBuilder.parse(bis);
 		doc.getDocumentElement().normalize();
 

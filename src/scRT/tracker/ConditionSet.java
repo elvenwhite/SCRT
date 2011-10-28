@@ -12,6 +12,10 @@ public class ConditionSet extends HashSet<Condition> {
 		setTarget(target);
 	}
 	
+	public ConditionSet() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void addCondition(ConfigurationValue cv1, ConfigurationValue cv2, int op){
 		this.add(new Condition(cv1,cv2,op));
 	}

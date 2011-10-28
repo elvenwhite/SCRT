@@ -2,6 +2,7 @@ package scRT.tracker;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashSet;
 
 import org.apache.log4j.Logger;
 import org.apache.xerces.parsers.DOMParser;
@@ -12,6 +13,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
 import scRT.parser.SCRTDOMParser;
+import scRT.tracker.exception.PropagationException;
 
 public class Tracker {
 	private static Logger log = Logger.getLogger(Tracker.class);
@@ -22,6 +24,10 @@ public class Tracker {
 
 	private DOMParser parser;
 	private SCRTDOMParser parser2;
+
+	private ConfigurationRequirementSet crs;
+
+	private PropagationSet ps;
 
 	public Tracker(String crfilename, String prfilename) {
 		parser = new SCRTDOMParser();
@@ -53,6 +59,13 @@ public class Tracker {
 			log.error(e.getMessage(), e);
 			return;
 		}
+	}
+
+	public Tracker(ConfigurationRequirementSet crs,
+			PropagationSet ps) {
+		this.crs=crs;
+		this.ps=ps;
+		
 	}
 
 	/** Returns a sorted list of attributes. */
@@ -91,10 +104,25 @@ public class Tracker {
 
 		NodeList nl = crdoc.getElementsByTagName("ConfigurationRequirement");
 
-		ConfigurationRequirementSet crs = new ConfigurationRequirementSet(nl);
+		ConfigurationRequirementSet crs = ConfigurationRequirementSet.getInstance(nl);
 
 		Document prdoc = tracker.parser2.getDocument();
 
 		pr.extract(prdoc);
+	}
+
+	public boolean trackdown(ConfigurationValue input) {
+		ConfigurationRequirement starter=crs.findCRbyCVID(input.getId());
+		HashSet<Propagation> ps = starter.getPropagations();
+		for(Propagation p:ps){
+			
+			try {
+				p.checkPropagation(input);
+			} catch (PropagationException e) {
+				// TODO Auto-generated catch block
+				return false;
+			}
+		}
+		return true;
 	}
 }

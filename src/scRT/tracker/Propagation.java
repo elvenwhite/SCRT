@@ -12,5 +12,5 @@ public abstract class Propagation {
 	public static final int SELECTIVE  = 3;
 	
 	public abstract void fire() throws PropagationException;
-	public abstract void checkPropagation() throws PropagationException;
+	public abstract void checkPropagation(ConfigurationValue input) throws PropagationException;
 }

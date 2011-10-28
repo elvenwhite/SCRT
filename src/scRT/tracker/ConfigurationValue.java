@@ -33,6 +33,12 @@ public class ConfigurationValue {
 		log.debug("CV: name:" + getName() + ", type:" + getType());
 	}
 
+	public ConfigurationValue(String id, String value) {
+		this.id=id;
+		this.value=value;
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getValue() {
 		return value;
 	}

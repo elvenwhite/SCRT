@@ -1,14 +1,34 @@
 package scRT.tracker;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 public class Condition {
 	private ConfigurationValue cv1;
 	private ConfigurationValue cv2;
 	private int op;
-	
-	public Condition (ConfigurationValue cv1, ConfigurationValue cv2, int op) {
+	private String cv1id;
+	private String cv2id;
+
+	public Condition(ConfigurationValue cv1, ConfigurationValue cv2, int op) {
 		setCv1(cv1);
 		setCv2(cv2);
 		this.setOp(op);
+	}
+
+	public Condition(Node item) {
+		NodeList cvlist = ((Element) item).getElementsByTagName("cv");
+		cv1id = cvlist.item(0).getAttributes().getNamedItem("id").getNodeValue();
+		cv2id = cvlist.item(1).getAttributes().getNamedItem("id").getNodeValue();
+
+		
+		NodeList oplist = ((Element) item).getElementsByTagName("operator");
+		String op=oplist.item(0).getTextContent();
+		op=op.trim();
+
+		if (op.equals("GREATER_THAN")) this.op=Operator.GREATER_THAN;
+		else throw new RuntimeException("not implemented");
 	}
 
 	public ConfigurationValue getCv1() {
@@ -27,25 +47,53 @@ public class Condition {
 		this.cv2 = cv2;
 	}
 
-	public boolean isTrue(){
-		switch(this.getOp()) {
-			case Operator.EQUAL:
-				if (cv1.getValue()==cv2.getValue()) return true ; else return false;
-			case Operator.GREATER_THAN:
-				if (Integer.parseInt(cv1.getValue())>Integer.parseInt(cv2.getValue()))  return true ; else return false;
-			case Operator.GREATER_THAN_OR_EQUAL:
-				if (Integer.parseInt(cv1.getValue())>=Integer.parseInt(cv2.getValue())) return true ; else return false;
-			case Operator.IS_EXIST_IN:
-				if (cv2.getValue().contains(cv1.getValue())) return true ; else return false;
-			case Operator.IS_SAME_TYPE:
-				if (cv1.getType()==cv2.getType()) return true ; else return false;
-			case Operator.LESS_THAN:
-				if (Integer.parseInt(cv1.getValue())<Integer.parseInt(cv2.getValue()))  return true ; else return false;
-			case Operator.LESS_THAN_OR_EQUAL:
-				if (Integer.parseInt(cv1.getValue())<=Integer.parseInt(cv2.getValue()))  return true ; else return false;
-			case Operator.NOT_EQUAL:
-				if (cv1.getValue()!=cv2.getValue()) return true ; else return false;
-		}	
+	public boolean isTrue() {
+		switch (this.getOp()) {
+		case Operator.EQUAL:
+			if (cv1.getValue() == cv2.getValue())
+				return true;
+			else
+				return false;
+		case Operator.GREATER_THAN:
+			if (Integer.parseInt(cv1.getValue()) > Integer.parseInt(cv2
+					.getValue()))
+				return true;
+			else
+				return false;
+		case Operator.GREATER_THAN_OR_EQUAL:
+			if (Integer.parseInt(cv1.getValue()) >= Integer.parseInt(cv2
+					.getValue()))
+				return true;
+			else
+				return false;
+		case Operator.IS_EXIST_IN:
+			if (cv2.getValue().contains(cv1.getValue()))
+				return true;
+			else
+				return false;
+		case Operator.IS_SAME_TYPE:
+			if (cv1.getType() == cv2.getType())
+				return true;
+			else
+				return false;
+		case Operator.LESS_THAN:
+			if (Integer.parseInt(cv1.getValue()) < Integer.parseInt(cv2
+					.getValue()))
+				return true;
+			else
+				return false;
+		case Operator.LESS_THAN_OR_EQUAL:
+			if (Integer.parseInt(cv1.getValue()) <= Integer.parseInt(cv2
+					.getValue()))
+				return true;
+			else
+				return false;
+		case Operator.NOT_EQUAL:
+			if (cv1.getValue() != cv2.getValue())
+				return true;
+			else
+				return false;
+		}
 		return false;
 	}
 

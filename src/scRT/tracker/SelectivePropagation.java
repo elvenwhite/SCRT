@@ -1,5 +1,7 @@
 package scRT.tracker;
 
+import scRT.tracker.exception.PropagationException;
+
 public class SelectivePropagation extends Propagation {
 
 	@Override
@@ -8,8 +10,11 @@ public class SelectivePropagation extends Propagation {
 		
 	}
 
+
+
 	@Override
-	public void checkPropagation() {
+	public void checkPropagation(ConfigurationValue input)
+			throws PropagationException {
 		// TODO Auto-generated method stub
 		
 	}

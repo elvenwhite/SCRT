@@ -1,5 +1,7 @@
 package scRT.tracker;
 
+import java.util.HashSet;
+
 import org.apache.log4j.Logger;
 import org.apache.xerces.dom.DeepNodeListImpl;
 import org.apache.xerces.dom.NodeImpl;
@@ -12,12 +14,14 @@ public class ConfigurationRequirement {
 
 	private ConfigurationValueSet CVSet;
 	private ConfigurationActionSet CASet;
-
+	private HashSet<Propagation> PRSet;
+	
 	private String name;
 	private String id;
 
 	public ConfigurationRequirement(Node item) {
 		super();
+		PRSet = new HashSet<Propagation>();
 		setCVSet(new ConfigurationValueSet());
 		setCASet(new ConfigurationActionSet());
 
@@ -69,6 +73,7 @@ public class ConfigurationRequirement {
 
 	public void extractCV(NodeImpl item) {
 		int length = 0;
+		
 		ConfigurationValue cv;
 
 		DeepNodeListImpl list = new DeepNodeListImpl(item, "ConfigurationValue");
@@ -100,5 +105,13 @@ public class ConfigurationRequirement {
 
 	public String getId() {
 		return id;
+	}
+
+	public HashSet<Propagation> getPropagations() {
+		return PRSet;
+	}
+
+	public void addPR(Propagation pr) {
+		this.PRSet.add(pr);
 	}
 }
