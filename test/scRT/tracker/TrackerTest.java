@@ -1,6 +1,6 @@
 package scRT.tracker;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 
@@ -13,21 +13,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
-
-public class PropagationTest {
+public class TrackerTest {
 
 	private ConfigurationRequirementSet crs;
 	private PropagationSet ps;
+
 	@Before
 	public void prepare() throws Exception {
+		Logger.getLogger("scRT").setLevel(Level.OFF);
+
 		prepareCR();
 		preparePropagation();
 	}
-	public void prepareCR() throws Exception {
-		Logger.getLogger("scRT").setLevel(Level.OFF);
 
+	public void prepareCR() throws Exception {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("<?xml version=\"1.0\"?>");
 		buffer.append("<CRD>");
@@ -58,14 +58,10 @@ public class PropagationTest {
 		doc.getDocumentElement().normalize();
 
 		Element root = doc.getDocumentElement();
-
-		NodeList nodeList = root
-				.getElementsByTagName("ConfigurationRequirement");
-		crs = ConfigurationRequirementSet.getInstance(nodeList);
+		crs = ConfigurationRequirementSet.getInstance(root);
 	}
-	public void preparePropagation() throws Exception {
-		Logger.getLogger("scRT").setLevel(Level.OFF);
 
+	public void preparePropagation() throws Exception {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("<?xml version=\"1.0\"?>");
 		buffer.append("<PropagationDocuments>");
@@ -96,18 +92,13 @@ public class PropagationTest {
 
 		Element root = doc.getDocumentElement();
 
-		
 		ps = new PropagationSet(root);
 	}
-	
+
 	@Test
-	
-	public void trackTest(){
-		ConfigurationValue input = new ConfigurationValue("bk101","15");
-		Tracker tracker = new Tracker(crs,ps);
+	public void trackTest() {
+		ConfigurationValue input = new ConfigurationValue("bk101", "15");
+		Tracker tracker = new Tracker(crs, ps);
 		assertTrue(tracker.trackdown(input));
 	}
-	
-	
-	
 }

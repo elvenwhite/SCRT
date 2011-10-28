@@ -3,9 +3,8 @@ package scRT.tracker;
 import java.util.HashSet;
 
 import org.apache.log4j.Logger;
-import org.apache.xerces.dom.DeepNodeListImpl;
-import org.apache.xerces.dom.NodeImpl;
-import org.w3c.dom.Node;
+import org.apache.xerces.util.DOMUtil;
+import org.w3c.dom.Element;
 
 public class ConfigurationRequirement {
 
@@ -15,87 +14,52 @@ public class ConfigurationRequirement {
 	private ConfigurationValueSet CVSet;
 	private ConfigurationActionSet CASet;
 	private HashSet<Propagation> PRSet;
-	
+
 	private String name;
 	private String id;
 
-	public ConfigurationRequirement(Node item) {
+	public ConfigurationRequirement(Element item) {
 		super();
-		PRSet = new HashSet<Propagation>();
-		setCVSet(new ConfigurationValueSet());
-		setCASet(new ConfigurationActionSet());
 
-		this.id = item.getAttributes().getNamedItem("id").getNodeValue();
+		this.PRSet = new HashSet<Propagation>();
+		this.CVSet = new ConfigurationValueSet();
+		this.CASet = new ConfigurationActionSet();
 
-		Node tempnode = item.getFirstChild();
+		this.id = DOMUtil.getAttrValue(item, "id");
 
-		while (tempnode.getNextSibling() != null) {
+		Element element = DOMUtil.getFirstChildElement(item, "name");
+		this.name = DOMUtil.getChildText(element);
 
-			if (tempnode.getNodeName().equals("name")) {
-				this.name = tempnode.getTextContent();
-			} else {
-				tempnode = tempnode.getNextSibling();
-				continue;
-			}
-			tempnode = tempnode.getNextSibling();
-
-		}
 		log.debug(getId() + "-" + getName());
-		extractCV((NodeImpl) item);
-		extractCA((NodeImpl) item);
-	}
-
-	public void addCV(ConfigurationValue cv) {
-		getCVSet().add(cv);
-		return;
-	}
-
-	public void addCA(ConfigurationAction ca) {
-		getCASet().add(ca);
-		return;
+		extractCV(item);
+		extractCA(item);
 	}
 
 	public ConfigurationValueSet getCVSet() {
 		return CVSet;
 	}
 
-	public void setCVSet(ConfigurationValueSet cVSet) {
-		CVSet = cVSet;
-	}
-
 	public ConfigurationActionSet getCASet() {
 		return CASet;
 	}
 
-	public void setCASet(ConfigurationActionSet cASet) {
-		CASet = cASet;
-	}
-
-	public void extractCV(NodeImpl item) {
-		int length = 0;
-		
-		ConfigurationValue cv;
-
-		DeepNodeListImpl list = new DeepNodeListImpl(item, "ConfigurationValue");
-
-		length = list.getLength();
-		for (int i = 0; i < length; i++) {
-			cv = new ConfigurationValue(list.item(i));
+	public void extractCV(Element item) {
+		Element child = DOMUtil
+				.getFirstChildElement(item, "ConfigurationValue");
+		while (child != null) {
+			ConfigurationValue cv = new ConfigurationValue(child);
 			CVSet.add(cv);
+			child = DOMUtil.getNextSiblingElement(child, "ConfigurationValue");
 		}
 	}
 
-	public void extractCA(NodeImpl item) {
-		int length = 0;
-		ConfigurationAction ca;
-
-		DeepNodeListImpl list = new DeepNodeListImpl(item,
+	public void extractCA(Element item) {
+		Element child = DOMUtil.getFirstChildElement(item,
 				"ConfigurationAction");
-
-		length = list.getLength();
-		for (int i = 0; i < length; i++) {
-			ca = new ConfigurationAction(list.item(i));
+		while (child != null) {
+			ConfigurationAction ca = new ConfigurationAction(child);
 			CASet.add(ca);
+			child = DOMUtil.getNextSiblingElement(child, "ConfigurationAction");
 		}
 	}
 
@@ -107,7 +71,7 @@ public class ConfigurationRequirement {
 		return id;
 	}
 
-	public HashSet<Propagation> getPropagations() {
+	public Iterable<Propagation> getPropagations() {
 		return PRSet;
 	}
 

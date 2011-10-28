@@ -10,18 +10,14 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.xerces.util.DOMUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 public class ConfigurationValueTest {
-	private Node firstNode, secondNode, thirdNode;
+	private Element firstValueElement, secondValueElement, thirdValueElement;
 
 	@Before
 	public void prepareDocument() throws Exception {
@@ -58,39 +54,25 @@ public class ConfigurationValueTest {
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-//		dBuilder.setErrorHandler(new ErrorHandler() {
-//			@Override
-//			public void error(SAXParseException e) throws SAXException {
-//				throw e;
-//			}
-//
-//			@Override
-//			public void fatalError(SAXParseException e) throws SAXException {
-//				throw e;
-//			}
-//
-//			@Override
-//			public void warning(SAXParseException e) throws SAXException {
-//				throw e;
-//			}
-//		});
 		Document doc = dBuilder.parse(bis);
 		doc.getDocumentElement().normalize();
 
 		Element root = doc.getDocumentElement();
-		NodeList rootList = root
-				.getElementsByTagName("ConfigurationRequirement");
-		NodeList nodeList = ((Element) rootList.item(0))
-				.getElementsByTagName("ConfigurationValue");
 
-		firstNode = nodeList.item(0);
-		secondNode = nodeList.item(1);
-		thirdNode = nodeList.item(2);
+		Element crElement = DOMUtil.getFirstChildElement(root,
+				"ConfigurationRequirement");
+		assertNotNull(crElement);
+		firstValueElement = DOMUtil.getFirstChildElement(crElement,
+				"ConfigurationValue");
+		secondValueElement = DOMUtil.getNextSiblingElement(firstValueElement,
+				"ConfigurationValue");
+		thirdValueElement = DOMUtil.getNextSiblingElement(secondValueElement,
+				"ConfigurationValue");
 	}
 
 	@Test
 	public void testIntTypeValue() throws Exception {
-		ConfigurationValue value = new ConfigurationValue(firstNode);
+		ConfigurationValue value = new ConfigurationValue(firstValueElement);
 		assertNotNull("Value should not be null.", value);
 		assertEquals("Configuration Value's id is invalid.", "id0001",
 				value.getId());
@@ -108,7 +90,7 @@ public class ConfigurationValueTest {
 
 	@Test
 	public void testFloatTypeValue() throws Exception {
-		ConfigurationValue value = new ConfigurationValue(secondNode);
+		ConfigurationValue value = new ConfigurationValue(secondValueElement);
 		assertNotNull("Value should not be null.", value);
 		assertEquals("Configuration Value's id is invalid.", "id0002",
 				value.getId());
@@ -126,7 +108,7 @@ public class ConfigurationValueTest {
 
 	@Test
 	public void testUnknownTypeValue() throws Exception {
-		ConfigurationValue value = new ConfigurationValue(thirdNode);
+		ConfigurationValue value = new ConfigurationValue(thirdValueElement);
 		assertNotNull("Value should not be null.", value);
 		assertEquals("Configuration Value's id is invalid.", "id0003",
 				value.getId());

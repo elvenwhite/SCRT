@@ -1,16 +1,8 @@
 package scRT.tracker;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashSet;
 
 import org.apache.log4j.Logger;
-import org.apache.xerces.parsers.DOMParser;
-import org.apache.xerces.xni.XMLLocator;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.NodeList;
 
 import scRT.parser.SCRTDOMParser;
 import scRT.tracker.exception.PropagationException;
@@ -18,111 +10,73 @@ import scRT.tracker.exception.PropagationException;
 public class Tracker {
 	private static Logger log = Logger.getLogger(Tracker.class);
 
-	private PrintWriter out;
-	static private boolean NotIncludeIgnorableWhiteSpaces = false;
-	private XMLLocator locator;
-
-	private DOMParser parser;
-	private SCRTDOMParser parser2;
-
 	private ConfigurationRequirementSet crs;
-
 	private PropagationSet ps;
 
-	public Tracker(String crfilename, String prfilename) {
-		parser = new SCRTDOMParser();
+	public Tracker(ConfigurationRequirementSet crs, PropagationSet ps) {
+		this.crs = crs;
+		this.ps = ps;
+	}
+
+	public boolean trackdown(ConfigurationValue input) {
+		ConfigurationRequirement starter = crs.findCRbyCVID(input.getId());
+		Iterable<Propagation> ps = starter.getPropagations();
+		for (Propagation p : ps) {
+			try {
+				p.checkPropagation(input);
+			} catch (PropagationException e) {
+				log.debug(e.getMessage(), e);
+				// FIXME Make Trace!!!
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static void main(String argv[]) {
+		if (argv == null || argv.length < 3) {
+			System.err
+					.println("Usage: java scRT.tracker.Tracker CRFile PSFile input");
+			return;
+		}
+
+		SCRTDOMParser crParser = parse(argv[0]);
+		if (crParser == null) {
+			System.err.println("Cannot load CRFile");
+			return;
+		}
+
+		ConfigurationRequirementSet crs = ConfigurationRequirementSet
+				.getInstance(crParser.getDocument().getDocumentElement());
+
+		SCRTDOMParser psParser = parse(argv[1]);
+		if (psParser == null) {
+			System.err.println("Cannot load PSFile");
+			return;
+		}
+
+		PropagationSet ps = new PropagationSet(psParser.getDocument()
+				.getDocumentElement());
+
+		Tracker tracker = new Tracker(crs, ps);
+		// TODO Do something with tracker
+	}
+
+	private static SCRTDOMParser parse(String filePath) {
+		SCRTDOMParser parser = new SCRTDOMParser();
 
 		try {
 			parser.setFeature(
 					"http://apache.org/xml/features/dom/defer-node-expansion",
 					false);
-			parser.parse(crfilename);
+			parser.parse(filePath);
 		} catch (IOException e) {
 			log.error(e.getMessage(), e);
-			return;
+			return null;
 		} catch (org.xml.sax.SAXException e) {
 			log.error(e.getMessage(), e);
-			return;
+			return null;
 		}
-
-		parser2 = new SCRTDOMParser();
-
-		try {
-			parser2.setFeature(
-					"http://apache.org/xml/features/dom/defer-node-expansion",
-					false);
-			parser2.parse(prfilename);
-		} catch (IOException e) {
-			log.error(e.getMessage(), e);
-			return;
-		} catch (org.xml.sax.SAXException e) {
-			log.error(e.getMessage(), e);
-			return;
-		}
-	}
-
-	public Tracker(ConfigurationRequirementSet crs,
-			PropagationSet ps) {
-		this.crs=crs;
-		this.ps=ps;
-		
-	}
-
-	/** Returns a sorted list of attributes. */
-	private Attr[] sortAttributes(NamedNodeMap attrs) {
-
-		int len = (attrs != null) ? attrs.getLength() : 0;
-		Attr array[] = new Attr[len];
-		for (int i = 0; i < len; i++) {
-			array[i] = (Attr) attrs.item(i);
-		}
-		for (int i = 0; i < len - 1; i++) {
-			String name = array[i].getNodeName();
-			int index = i;
-			for (int j = i + 1; j < len; j++) {
-				String curName = array[j].getNodeName();
-				if (curName.compareTo(name) < 0) {
-					name = curName;
-					index = j;
-				}
-			}
-			if (index != i) {
-				Attr temp = array[i];
-				array[i] = array[index];
-				array[index] = temp;
-			}
-		}
-
-		return (array);
-
-	} // sortAttributes(NamedNodeMap):Attr[]
-
-	public static void main(String argv[]) {
-		Tracker tracker = new Tracker(argv[0], argv[1]);
-		PropagationSet pr = new PropagationSet();
-		Document crdoc = tracker.parser.getDocument();
-
-		NodeList nl = crdoc.getElementsByTagName("ConfigurationRequirement");
-
-		ConfigurationRequirementSet crs = ConfigurationRequirementSet.getInstance(nl);
-
-		Document prdoc = tracker.parser2.getDocument();
-
-		pr.extract(prdoc);
-	}
-
-	public boolean trackdown(ConfigurationValue input) {
-		ConfigurationRequirement starter=crs.findCRbyCVID(input.getId());
-		HashSet<Propagation> ps = starter.getPropagations();
-		for(Propagation p:ps){
-			
-			try {
-				p.checkPropagation(input);
-			} catch (PropagationException e) {
-				// TODO Auto-generated catch block
-				return false;
-			}
-		}
-		return true;
+		return parser;
 	}
 }

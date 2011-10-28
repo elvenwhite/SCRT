@@ -10,15 +10,12 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.xerces.util.DOMUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 public class ConfigurationRequirementTest {
 	private ConfigurationRequirement requirement1;
@@ -71,30 +68,13 @@ public class ConfigurationRequirementTest {
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-//		dBuilder.setErrorHandler(new ErrorHandler() {
-//			@Override
-//			public void error(SAXParseException e) throws SAXException {
-//				throw e;
-//			}
-//
-//			@Override
-//			public void fatalError(SAXParseException e) throws SAXException {
-//				throw e;
-//			}
-//
-//			@Override
-//			public void warning(SAXParseException e) throws SAXException {
-//				throw e;
-//			}
-//		});
 		Document doc = dBuilder.parse(bis);
 		doc.getDocumentElement().normalize();
 
 		Element root = doc.getDocumentElement();
-
-		NodeList nodeList = root
-				.getElementsByTagName("ConfigurationRequirement");
-		requirement1 = new ConfigurationRequirement(nodeList.item(0));
+		Element crElement = DOMUtil.getFirstChildElement(root,
+				"ConfigurationRequirement");
+		requirement1 = new ConfigurationRequirement(crElement);
 	}
 
 	@After

@@ -2,7 +2,8 @@ package scRT.tracker;
 
 import java.util.HashSet;
 
-import org.w3c.dom.NodeList;
+import org.apache.xerces.util.DOMUtil;
+import org.w3c.dom.Element;
 
 public class ConfigurationRequirementSet extends
 		HashSet<ConfigurationRequirement> {
@@ -15,9 +16,9 @@ public class ConfigurationRequirementSet extends
 		return instance;
 	}
 
-	public static ConfigurationRequirementSet getInstance(NodeList nl) {
+	public static ConfigurationRequirementSet getInstance(Element item) {
 		if (instance == null) {
-			instance = new ConfigurationRequirementSet(nl);
+			instance = new ConfigurationRequirementSet(item);
 		}
 
 		return instance;
@@ -25,19 +26,19 @@ public class ConfigurationRequirementSet extends
 
 	private static final long serialVersionUID = -7923981409249906869L;
 
-	private ConfigurationRequirementSet(NodeList nl) {
+	private ConfigurationRequirementSet(Element item) {
 		super();
-		int len = nl.getLength();
-
-		for (int i = 0; i < len; i++) {
-			ConfigurationRequirement cr = new ConfigurationRequirement(
-					nl.item(i));
+		Element element = DOMUtil.getFirstChildElement(item,
+				"ConfigurationRequirement");
+		while (element != null) {
+			ConfigurationRequirement cr = new ConfigurationRequirement(element);
 			this.add(cr);
+			element = DOMUtil.getNextSiblingElement(element,
+					"ConfigurationRequirement");
 		}
 	}
 
 	public ConfigurationRequirement findCRbyCVID(String id) {
-		// TODO Auto-generated method stub
 		for (ConfigurationRequirement cr : this) {
 			for (ConfigurationValue cv : cr.getCVSet()) {
 				if (cv.getId().equals(id))
@@ -46,12 +47,11 @@ public class ConfigurationRequirementSet extends
 		}
 		return null;
 	}
-	
-	public ConfigurationRequirement findCRbyCRID(String id){
+
+	public ConfigurationRequirement findCRbyCRID(String id) {
 		for (ConfigurationRequirement cr : this) {
-				if (cr.getId().equals(id))
-					return cr;
-			
+			if (cr.getId().equals(id))
+				return cr;
 		}
 		return null;
 	}

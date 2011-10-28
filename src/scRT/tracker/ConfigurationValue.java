@@ -1,8 +1,8 @@
 package scRT.tracker;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.apache.xerces.util.DOMUtil;
+import org.w3c.dom.Element;
 
 public class ConfigurationValue {
 	private static Logger log = Logger.getLogger(ConfigurationValue.class);
@@ -12,31 +12,24 @@ public class ConfigurationValue {
 	private String type;
 	private String value;
 
-	public ConfigurationValue(Node item) {
-		this.id = item.getAttributes().getNamedItem("id").getNodeValue();
+	public ConfigurationValue(Element item) {
+		this.id = DOMUtil.getAttrValue(item, "id");
 
-		NodeList childNodes = item.getChildNodes();
-		int childrenLength = childNodes.getLength();
-		for (int i = 0; i < childrenLength; i++) {
-			Node child = childNodes.item(i);
-			String childNodeName = child.getNodeName();
-			if (childNodeName.equals("name")) {
-				this.name = child.getTextContent();
-			} else if (childNodeName.equals("type")) {
-				this.type = child.getTextContent();
-			} else if (childNodeName.equals("value")) {
-				this.value = child.getTextContent();
-			} else {
-				continue;
-			}
-		}
+		Element element = DOMUtil.getFirstChildElement(item, "name");
+		this.name = DOMUtil.getChildText(element);
+
+		element = DOMUtil.getFirstChildElement(item, "type");
+		this.type = DOMUtil.getChildText(element);
+
+		element = DOMUtil.getFirstChildElement(item, "value");
+		this.value = DOMUtil.getChildText(element);
+
 		log.debug("CV: name:" + getName() + ", type:" + getType());
 	}
 
 	public ConfigurationValue(String id, String value) {
-		this.id=id;
-		this.value=value;
-		// TODO Auto-generated constructor stub
+		this.id = id;
+		this.value = value;
 	}
 
 	public String getValue() {

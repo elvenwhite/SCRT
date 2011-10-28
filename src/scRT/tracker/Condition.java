@@ -1,50 +1,60 @@
 package scRT.tracker;
 
+import org.apache.xerces.util.DOMUtil;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class Condition {
 	private ConfigurationValue cv1;
 	private ConfigurationValue cv2;
 	private int op;
-	private String cv1id;
-	private String cv2id;
 
 	public Condition(ConfigurationValue cv1, ConfigurationValue cv2, int op) {
-		setCv1(cv1);
-		setCv2(cv2);
-		this.setOp(op);
+		this.cv1 = cv1;
+		this.cv2 = cv2;
+		this.op = op;
 	}
 
-	public Condition(Node item) {
-		NodeList cvlist = ((Element) item).getElementsByTagName("cv");
-		cv1id = cvlist.item(0).getAttributes().getNamedItem("id").getNodeValue();
-		cv2id = cvlist.item(1).getAttributes().getNamedItem("id").getNodeValue();
+	public Condition(Element item) {
+		Element element = DOMUtil.getFirstChildElement(item, "cv");
+		String cv1id = DOMUtil.getAttrValue(element, "id");
+		this.cv1 = findConfigurationValue(cv1id);
 
-		
-		NodeList oplist = ((Element) item).getElementsByTagName("operator");
-		String op=oplist.item(0).getTextContent();
-		op=op.trim();
+		element = DOMUtil.getNextSiblingElement(element, "cv");
+		String cv2id = DOMUtil.getAttrValue(element, "id");
+		this.cv2 = findConfigurationValue(cv2id);
 
-		if (op.equals("GREATER_THAN")) this.op=Operator.GREATER_THAN;
-		else throw new RuntimeException("not implemented");
+		element = DOMUtil.getFirstChildElement(item, "operator");
+		String opText = DOMUtil.getChildText(element).trim();
+		if (opText.equals("EQUAL"))
+			this.op = Operator.EQUAL;
+		else if (opText.equals("LESS_THAN"))
+			this.op = Operator.LESS_THAN;
+		else if (opText.equals("LESS_THAN_OR_EQUAL"))
+			this.op = Operator.LESS_THAN_OR_EQUAL;
+		else if (opText.equals("GREATER_THAN"))
+			this.op = Operator.GREATER_THAN;
+		else if (opText.equals("GREATER_THAN_OR_EQUAL"))
+			this.op = Operator.GREATER_THAN_OR_EQUAL;
+		else if (opText.equals("NOT_EQUAL"))
+			this.op = Operator.NOT_EQUAL;
+		else if (opText.equals("IS_SAME_TYPE"))
+			this.op = Operator.IS_SAME_TYPE;
+		else if (opText.equals("IS_EXIST_IN"))
+			this.op = Operator.IS_EXIST_IN;
+		else
+			throw new RuntimeException("Unknown operator!!!");
 	}
 
 	public ConfigurationValue getCv1() {
 		return cv1;
 	}
 
-	public void setCv1(ConfigurationValue cv1) {
-		this.cv1 = cv1;
-	}
-
 	public ConfigurationValue getCv2() {
 		return cv2;
 	}
 
-	public void setCv2(ConfigurationValue cv2) {
-		this.cv2 = cv2;
+	public int getOp() {
+		return op;
 	}
 
 	public boolean isTrue() {
@@ -97,11 +107,16 @@ public class Condition {
 		return false;
 	}
 
-	public int getOp() {
-		return op;
-	}
-
-	public void setOp(int op) {
-		this.op = op;
+	private ConfigurationValue findConfigurationValue(String cvId) {
+		ConfigurationRequirementSet crs = ConfigurationRequirementSet
+				.getInstance();
+		for (ConfigurationRequirement cr : crs) {
+			for (ConfigurationValue cv : cr.getCVSet()) {
+				if (cv.getId().equals(cvId)) {
+					return cv;
+				}
+			}
+		}
+		return null;
 	}
 }

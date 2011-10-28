@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.Node;
+import org.apache.xerces.util.DOMUtil;
+import org.w3c.dom.Element;
 
 public class ConfigurationAction {
 	private static Logger log = Logger.getLogger(ConfigurationAction.class);
@@ -13,23 +14,20 @@ public class ConfigurationAction {
 	private String name;
 	private List<String> args;
 
-	public ConfigurationAction(Node item) {
+	public ConfigurationAction(Element item) {
 		this.args = new ArrayList<String>();
-		this.id = item.getAttributes().getNamedItem("id").getNodeValue();
+		
+		this.id = DOMUtil.getAttrValue(item, "id");
 
-		Node tempnode = item.getFirstChild();
+		Element element = DOMUtil.getFirstChildElement(item, "name");
+		this.name = DOMUtil.getChildText(element);
 
-		while (tempnode.getNextSibling() != null) {
-			if (tempnode.getNodeName().equals("name")) {
-				this.name = tempnode.getTextContent();
-			} else if (tempnode.getNodeName().equals("arg")) {
-				this.args.add(tempnode.getTextContent());
-			} else {
-				tempnode = tempnode.getNextSibling();
-				continue;
-			}
-			tempnode = tempnode.getNextSibling();
+		element = DOMUtil.getFirstChildElement(item, "arg");
+		while (element != null) {
+			this.args.add(DOMUtil.getChildText(element));
+			element = DOMUtil.getNextSiblingElement(element, "arg");
 		}
+
 		log.debug("CA" + getName() + "-" + getArgs());
 	}
 
