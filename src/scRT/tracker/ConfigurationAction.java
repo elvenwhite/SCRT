@@ -60,4 +60,9 @@ public class ConfigurationAction {
 		ConfigurationAction compare = (ConfigurationAction) o;
 		return compare.id.equals(id);
 	}
+
+	public void toArray(ConfigurationAction[] caArray) {
+		// TODO Auto-generated method stub
+		
+	}
 }

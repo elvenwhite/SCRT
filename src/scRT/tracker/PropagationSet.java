@@ -22,9 +22,9 @@ public class PropagationSet extends HashSet<Propagation> {
 			if (type.equals("imperative")) {
 				this.add(new ImperativePropagation(element));
 			} else if (type.equals("conductive")) {
-				// TODO Implement for conductive propagation!!!
+				this.add(new ConductivePropagation(element));
 			} else if (type.equals("selective")) {
-				// TODO Implement for selective propagation!!!
+				this.add(new SelectivePropagation(element));
 			} else {
 			}
 			element = DOMUtil.getNextSiblingElement(element, TAG_PROPAGATION);

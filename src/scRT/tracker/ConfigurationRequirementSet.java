@@ -55,4 +55,14 @@ public class ConfigurationRequirementSet extends
 		}
 		return null;
 	}
+
+	public ConfigurationAction findCAbyCAID(String id) {
+		for (ConfigurationRequirement cr : this) {
+			for (ConfigurationAction ca: cr.getCASet()){
+				if (ca.getId().equals(id))
+					return ca;
+			}
+		}
+		return null;
+	}
 }
