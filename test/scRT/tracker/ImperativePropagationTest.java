@@ -78,9 +78,7 @@ public class ImperativePropagationTest {
 		buffer.append("			<cv id=\"bk104\"/>		");
 		buffer.append("		</condition>				");
 		buffer.append("	</propagation>					");
-		buffer.append("	<propagation id=\"pr2\">		");
-		buffer.append("		<type>conductive</type>		");
-		buffer.append("	</propagation>					");
+
 		buffer.append("</PropagationDocuments>			");
 
 		ByteArrayInputStream bis = new ByteArrayInputStream(buffer.toString()

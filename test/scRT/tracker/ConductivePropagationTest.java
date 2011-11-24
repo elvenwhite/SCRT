@@ -90,7 +90,7 @@ public class ConductivePropagationTest {
 		buffer.append("		<target id=\"cr2\"/>		");
 
 		buffer.append("			<ca id=\"bk112\"/>		");
-	
+		buffer.append("	</propagation>		");
 		buffer.append("</PropagationDocuments>			");
 
 		ByteArrayInputStream bis = new ByteArrayInputStream(buffer.toString()
